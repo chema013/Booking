@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { hash } from 'bcryptjs';
 
 import { Department } from "src/department/entities/department.entity";
 import { Reservation } from "src/reservation/entities/reservation.entity";
@@ -11,7 +12,7 @@ export class UserResident {
     @Column({ type: 'varchar', length: 45, nullable: false})
     username: string;
 
-    @Column({ type: 'varchar', length: 45, nullable: false})
+    @Column({ type: 'varchar', length: 128, nullable: false, select: false})
     password: string;
 
     @Column({ type: 'varchar', length: 45, nullable: false, default: 'RESIDENT'})
@@ -35,4 +36,13 @@ export class UserResident {
 
     @UpdateDateColumn({ type: 'datetime' })
     updatedAt: Date;
+
+    @BeforeInsert()
+    @BeforeUpdate()
+        async hashPassword() {
+            if (!this.password) {
+                return;
+            }
+            this.password = await hash(this.password, 10);
+        }
 }

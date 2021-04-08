@@ -7,6 +7,7 @@ import { UserAdminModule } from './user-admin/user-admin.module';
 import { UserResidentModule } from './user-resident/user-resident.module';
 import { DepartmentModule } from './department/department.module';
 import { ReservationModule } from './reservation/reservation.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ReservationModule } from './reservation/reservation.module';
       // logging: true,
       // logger: 'file',
     }),
+    AuthModule,
 
   ],
   controllers: [],

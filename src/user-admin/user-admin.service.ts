@@ -16,7 +16,10 @@ export class UserAdminService {
 
   async create(createUserAdminDto: CreateUserAdminDto) {
     const userAdmin = this.userAdmRepository.create(createUserAdminDto);
-    return await this.userAdmRepository.save(userAdmin);
+    const user = await this.userAdmRepository.save(userAdmin);
+
+    delete user.password;
+    return user;
   }
 
   async findAll() {

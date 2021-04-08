@@ -7,6 +7,10 @@ import { UpdateUserResidentDto } from './dto/update-user-resident.dto';
 
 import { UserResident } from './entities/user-resident.entity';
 
+export interface UserFindOnebyUsername {
+  id?: number;
+  username?: string;
+}
 @Injectable()
 export class UserResidentService {
 
@@ -29,7 +33,9 @@ export class UserResidentService {
 
     createUserResidentDto.departments = departmentsArray;
     const userResident = this.userResRepository.create(createUserResidentDto);
-    return await this.userResRepository.save(userResident);
+    const user = await this.userResRepository.save(userResident);
+    delete user.password;
+    return user;
 
   }
 
@@ -72,5 +78,13 @@ export class UserResidentService {
             return userR;
         }
         return { message: 'User does not exists' }
+  }
+
+  async findByUsername( data: UserFindOnebyUsername ) {
+    return await this.userResRepository
+      .createQueryBuilder('user')
+      .where( data )
+      .addSelect('user.password')
+      .getOne()
   }
 }

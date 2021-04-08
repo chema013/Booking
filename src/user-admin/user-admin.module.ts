@@ -10,6 +10,7 @@ import { UserAdmin } from './entities/user-admin.entity';
     TypeOrmModule.forFeature([UserAdmin])
   ],
   controllers: [UserAdminController],
-  providers: [UserAdminService]
+  providers: [UserAdminService],
+  exports: [UserAdminService]
 })
 export class UserAdminModule {}

@@ -12,6 +12,7 @@ import { Department } from 'src/department/entities/department.entity';
     TypeOrmModule.forFeature([UserResident, Department, Reservation])
   ],
   controllers: [UserResidentController],
-  providers: [UserResidentService]
+  providers: [UserResidentService],
+  exports: [UserResidentService]
 })
 export class UserResidentModule {}

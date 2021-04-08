@@ -1,5 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { hash } from 'bcryptjs';
 @Entity('user_admin')
 export class UserAdmin {
     @PrimaryGeneratedColumn()
@@ -8,7 +8,7 @@ export class UserAdmin {
     @Column({ type: 'varchar', length: 45, nullable: false})
     username: string;
 
-    @Column({ type: 'varchar', length: 45, nullable: false})
+    @Column({ type: 'varchar', length: 128, nullable: false, select: false})
     password: string;
 
     @Column({ type: 'varchar', length: 45, nullable: false, default: 'ADMIN'})
@@ -19,4 +19,14 @@ export class UserAdmin {
 
     @UpdateDateColumn({ type: 'datetime' })
     updatedAt: Date;
+
+    @BeforeInsert()
+    @BeforeUpdate()
+        async hashPassword() {
+            if (!this.password) {
+                return;
+            }
+            this.password = await hash(this.password, 10);
+        }
+
 }

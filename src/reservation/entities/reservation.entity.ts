@@ -8,7 +8,7 @@ export class Reservation {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: 'boolean', default: 'true'})
+    @Column({ type: 'boolean', default: true})
     state: boolean;
 
     @CreateDateColumn({ type: 'datetime' })
