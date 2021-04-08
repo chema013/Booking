@@ -5,7 +5,9 @@ import { UpdateUserAdminDto } from './dto/update-user-admin.dto';
 import { ACGuard, UseRoles } from 'nest-access-control';
 import { AppResources } from 'src/app.roles';
 import { Auth } from 'src/common/decorators';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('User Admin')
 @Controller('user-admin')
 export class UserAdminController {
   constructor(private readonly userAdminService: UserAdminService) {}

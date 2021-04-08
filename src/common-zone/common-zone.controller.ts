@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { ACGuard, UseRoles } from 'nest-access-control';
 import { AppResources } from 'src/app.roles';
 import { Auth } from 'src/common/decorators';
@@ -6,6 +7,7 @@ import { CommonZoneService } from './common-zone.service';
 import { CreateCommonZoneDto } from './dto/create-common-zone.dto';
 import { UpdateCommonZoneDto } from './dto/update-common-zone.dto';
 
+@ApiTags('Common Zone')
 @Controller('common-zone')
 export class CommonZoneController {
   constructor(private readonly commonZoneService: CommonZoneService) {}

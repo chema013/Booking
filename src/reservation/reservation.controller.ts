@@ -5,7 +5,9 @@ import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { ACGuard, UseRoles } from 'nest-access-control';
 import { AppResources } from 'src/app.roles';
 import { Auth } from 'src/common/decorators';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Reservations')
 @Controller('reservation')
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}

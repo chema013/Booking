@@ -6,7 +6,9 @@ import { ACGuard, InjectRolesBuilder, RolesBuilder, UseRoles } from 'nest-access
 
 import { Auth } from 'src/common/decorators';
 import { AppResources } from 'src/app.roles';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('user-resident')
 export class UserResidentController {
   constructor(

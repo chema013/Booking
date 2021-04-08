@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { ACGuard, UseRoles } from 'nest-access-control';
 import { AppResources } from 'src/app.roles';
 import { Auth } from 'src/common/decorators';
@@ -6,6 +7,7 @@ import { DepartmentService } from './department.service';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
 
+@ApiTags('Department')
 @Controller('department')
 export class DepartmentController {
   constructor(private readonly departmentService: DepartmentService
