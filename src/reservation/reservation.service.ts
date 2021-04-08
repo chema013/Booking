@@ -28,16 +28,23 @@ export class ReservationService {
     createReservationDto.commonZone = zone;
     createReservationDto.userResident = resident;
 
-    if(this.validateHour(createReservationDto.start, createReservationDto.finish))
-    throw new NotFoundException('Hour not valid');
+    if(this.validateHour(createReservationDto.start, createReservationDto.finish)){
+      throw new NotFoundException('Hour not valid, another reservation is overlapping');
+    }
 
     const reservation = this.reservationRepository.create(createReservationDto);
     return await this.reservationRepository.save(reservation);
 
   }
 
-  async findAll() {
-    return await this.reservationRepository.find();
+  async findAll(limit: string, page: string) {
+    const reservations = await this.reservationRepository.find(
+      { where: {state: true}, take: Number(limit), skip: Number(page) * Number(limit) }
+      );
+
+    if(!reservations) throw new NotFoundException('Reservations not found');
+
+    return reservations;
   }
 
   async findOne(id: number) {
@@ -46,7 +53,23 @@ export class ReservationService {
   }
 
   async update(id: number, updateReservationDto: UpdateReservationDto) {
-    return `This action updates a #${id} reservation`;
+    const reservation = await this.reservationRepository.findOne(id);
+    if(!reservation) throw new NotFoundException('Reservation does not exist')
+
+    if( updateReservationDto.commonZoneId ){
+          const zone = await this.zoneRepository.findOne(Number(updateReservationDto.commonZoneId));
+          if( zone ) updateReservationDto.commonZone = zone;
+          else throw new NotFoundException('Zone does not exists');
+    }
+
+    if( updateReservationDto.userResidentId ){
+      const user = await this.userResidentRepository.findOne(Number(updateReservationDto.userResidentId));
+      if( user ) updateReservationDto.userResident = user;
+      else throw new NotFoundException('Resident does not exists');
+    }
+
+    const editedDepartment = Object.assign(reservation, updateReservationDto);
+    return await this.reservationRepository.save(editedDepartment);
   }
 
   async remove(id: number) {
@@ -66,8 +89,10 @@ export class ReservationService {
     ms = Date.parse(finish);
     const hourfinish = new Date(ms);
 
-    const reservations = await this.findAll();
+    const reservations = await this.reservationRepository.find()
     const result = reservations.filter( item => ((item.start >= hourfinish || item.start < hourInit) && (item.finish > hourfinish || item.finish <= hourInit) ) )
+
+    console.log(result);
 
     if (result.length > 0) return true;
     else return false;

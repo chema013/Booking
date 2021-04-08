@@ -1,5 +1,5 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards, Query } from '@nestjs/common';
+import { ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ACGuard, UseRoles } from 'nest-access-control';
 import { AppResources } from 'src/app.roles';
 import { Auth } from 'src/common/decorators';
@@ -24,9 +24,11 @@ export class CommonZoneController {
     return this.commonZoneService.create(createCommonZoneDto);
   }
 
+  @ApiQuery({name: 'limit', description: 'Max number of results for page. IT IS OPTIONAL, it can be empty.', type: Number, example: 2, required: false })
+  @ApiQuery({name: 'page', description: 'Number of page, can be 0 to n. IT IS OPTIONAL, it can be empty.', type: Number, example: 0, required: false })
   @Get()
-  findAll() {
-    return this.commonZoneService.findAll();
+  findAll(@Query('limit') limit, @Query('page') page) {
+    return this.commonZoneService.findAll(limit, page);
   }
 
   @Get(':id')

@@ -39,8 +39,8 @@ export class UserResidentService {
 
   }
 
-  async findAll() {
-    return await this.userResRepository.find();
+  async findAll(limit, page) {
+    return await this.userResRepository.find({ where: {roles: ['RESIDENT']}, take: Number(limit), skip: Number(page) * Number(limit) });
   }
 
   async findOne(id: number) {

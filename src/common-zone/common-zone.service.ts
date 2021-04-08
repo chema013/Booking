@@ -24,8 +24,10 @@ export class CommonZoneService {
     return await this.commonZoneRepository.save(zone);
   }
 
-  async findAll() {
-    const zones = await this.commonZoneRepository.find();
+  async findAll(limit: string, page: string) {
+    const zones = await this.commonZoneRepository.find(
+      { where: {booking: true}, take: Number(limit), skip: Number(page) * Number(limit) }
+    );
     if(!zones) throw new NotFoundException('Zone does not found');
 
     return zones;

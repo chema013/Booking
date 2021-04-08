@@ -1,5 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards, Query } from '@nestjs/common';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ACGuard, UseRoles } from 'nest-access-control';
 import { AppResources } from 'src/app.roles';
 import { Auth } from 'src/common/decorators';
@@ -25,12 +25,26 @@ export class DepartmentController {
     return this.departmentService.create(createDepartmentDto);
   }
 
+  @ApiQuery({name: 'limit', description: 'Max number of results for page. IT IS OPTIONAL, it can be empty.', type: Number, example: 2, required: false })
+  @ApiQuery({name: 'page', description: 'Number of page, can be 0 to n. IT IS OPTIONAL, it can be empty.', type: Number, example: 0, required: false })
+  @UseGuards(ACGuard)
+  @UseRoles({
+    possession: 'own',
+    action: 'create',
+    resource: AppResources.DEPARTMENT
+  })
   @Auth()
   @Get()
-  findAll() {
-    return this.departmentService.findAll();
+  findAll(@Query('limit') limit, @Query('page') page) {
+    return this.departmentService.findAll(limit, page);
   }
 
+  @UseGuards(ACGuard)
+  @UseRoles({
+    possession: 'own',
+    action: 'create',
+    resource: AppResources.DEPARTMENT
+  })
   @Auth()
   @Get(':id')
   findOne(@Param('id') id: string) {

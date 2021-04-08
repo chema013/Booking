@@ -27,12 +27,15 @@ export class DepartmentService {
       }
 
       createDepartmentDto.residents = usersArray;
+
       const department = this.departmentRepository.create((createDepartmentDto as any));
       return await this.departmentRepository.save(department);
   }
 
-  async findAll() {
-    const departments = await this.departmentRepository.find();
+  async findAll(limit, page) {
+    const departments = await this.departmentRepository.find(
+      { where: {availability: true}, take: Number(limit), skip: Number(page) * Number(limit) }
+    );
     if(!departments) throw new NotFoundException('Departments not found');
 
     return departments;
