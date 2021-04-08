@@ -22,11 +22,14 @@ export class ReservationService {
 
   async create(createReservationDto: CreateReservationDto) {
 
-    const resident = await this.userResidentRepository.findOne(createReservationDto.userResidentId);
-    const zone = await this.zoneRepository.findOne(createReservationDto.userResidentId);
+    const resident = await this.userResidentRepository.findOne(Number(createReservationDto.userResidentId));
+    const zone = await this.zoneRepository.findOne(Number(createReservationDto.commonZoneId));
     if( !resident || !zone ) throw new NotFoundException('Resident id or Zone id does not exists, id is not valid');
     createReservationDto.commonZone = zone;
     createReservationDto.userResident = resident;
+
+    if(this.validateHour(createReservationDto.start, createReservationDto.finish))
+    throw new NotFoundException('Hour not valid');
 
     const reservation = this.reservationRepository.create(createReservationDto);
     return await this.reservationRepository.save(reservation);
@@ -56,4 +59,18 @@ export class ReservationService {
         }
         return { message: 'Reservation does not exists' }
   }
+
+  async validateHour(start: string, finish: string) {
+    let ms = Date.parse(start);
+    const hourInit = new Date(ms);
+    ms = Date.parse(finish);
+    const hourfinish = new Date(ms);
+
+    const reservations = await this.findAll();
+    const result = reservations.filter( item => ((item.start >= hourfinish || item.start < hourInit) && (item.finish > hourfinish || item.finish <= hourInit) ) )
+
+    if (result.length > 0) return true;
+    else return false;
+  }
+
 }

@@ -8,6 +8,8 @@ import { UserResidentModule } from './user-resident/user-resident.module';
 import { DepartmentModule } from './department/department.module';
 import { ReservationModule } from './reservation/reservation.module';
 import { AuthModule } from './auth/auth.module';
+import { AccessControlModule } from 'nest-access-control';
+import { roles } from './app.roles';
 
 @Module({
   imports: [
@@ -31,6 +33,7 @@ import { AuthModule } from './auth/auth.module';
       // logging: true,
       // logger: 'file',
     }),
+    AccessControlModule.forRoles(roles),
     AuthModule,
 
   ],

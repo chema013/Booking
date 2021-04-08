@@ -11,8 +11,8 @@ export class UserAdmin {
     @Column({ type: 'varchar', length: 128, nullable: false, select: false})
     password: string;
 
-    @Column({ type: 'varchar', length: 45, nullable: false, default: 'ADMIN'})
-    role: string;
+    @Column({ type: 'simple-array' })
+    roles: string[];
 
     @CreateDateColumn({ type: 'datetime' })
     createdAt: Date;

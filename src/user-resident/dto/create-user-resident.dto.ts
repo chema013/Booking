@@ -1,4 +1,5 @@
-import { IsArray, IsString } from 'class-validator';
+import { IsArray, IsEnum, IsString } from 'class-validator';
+import { AppRoles } from 'src/app.roles';
 
 export class CreateUserResidentDto {
     @IsString()
@@ -7,8 +8,12 @@ export class CreateUserResidentDto {
     @IsString()
     password: string;
 
-    @IsString()
-    role: string;
+    @IsArray()
+    @IsEnum(AppRoles, {
+    each: true,
+    message: `must be a valid role value, [RESIDENT, ADMIN]`,
+    })
+    roles: string[];
 
     @IsArray()
     departments: any[];

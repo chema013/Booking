@@ -1,7 +1,7 @@
 import { Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 
 import { User } from 'src/common/decorators';
+import { UserAdmin } from 'src/user-admin/entities/user-admin.entity';
 import { UserResident } from 'src/user-resident/entities/user-resident.entity';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard, JwtAuthGuard } from './guards';
@@ -25,16 +25,49 @@ export class AuthController {
 
     @UseGuards(JwtAuthGuard)
     @Get('profile')
-    profile() {
-        return 'Estos son tu datos';
+    profile(@User() user: UserResident) {
+        return {
+            message: 'Request valid',
+            user
+        }
     }
 
     @UseGuards(JwtAuthGuard)
     @Get('refresh')
     refreshToken(@User() user: UserResident) {
-        const data = this.authService.login(user);
+        const data = this.authService.loginAdmin(user);
         return {
-            message: 'Refresh exitoso',
+            message: 'Refresh Successful',
+            data
+        }
+    }
+//////////////////////////////////////////
+
+    @UseGuards(LocalAuthGuard)
+    @Post('loginAdmin')
+    async loginAdmin(@User() user: UserAdmin) {
+        const data = await this.authService.loginAdmin(user)
+        return {
+            message: 'Login Admin Successful',
+            data
+        };
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('profileAdmin')
+    profileAdmin(@User() user: UserAdmin) {
+        return {
+            message: 'Request Admin valid',
+            user
+        }
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('refreshAdmin')
+    refreshTokenAdmin(@User() user: UserAdmin) {
+        const data = this.authService.loginAdmin(user);
+        return {
+            message: 'Refresh Admin Successful',
             data
         }
     }

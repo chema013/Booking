@@ -1,4 +1,5 @@
-import { IsString, MaxLength, MinLength } from 'class-validator';
+import { IsArray, IsEnum, IsString, MaxLength, MinLength } from 'class-validator';
+import { AppRoles } from 'src/app.roles';
 
 export class CreateUserAdminDto {
     @IsString()
@@ -9,6 +10,10 @@ export class CreateUserAdminDto {
     @MaxLength(128)
     password: string;
 
-    @IsString()
-    role: string;
+    @IsArray()
+    @IsEnum(AppRoles, {
+    each: true,
+    message: `must be a valid role value, [RESIDENT, ADMIN]`,
+    })
+    roles: string[];
 }

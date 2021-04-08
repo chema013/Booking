@@ -15,8 +15,8 @@ export class UserResident {
     @Column({ type: 'varchar', length: 128, nullable: false, select: false})
     password: string;
 
-    @Column({ type: 'varchar', length: 45, nullable: false, default: 'RESIDENT'})
-    role: string;
+    @Column({ type: 'simple-array' })
+    roles: string[];
 
     @OneToMany(() => Reservation, reservation => reservation.userResident, {
         eager: true,

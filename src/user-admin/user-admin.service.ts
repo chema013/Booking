@@ -6,6 +6,10 @@ import { UpdateUserAdminDto } from './dto/update-user-admin.dto';
 
 import { UserAdmin } from './entities/user-admin.entity';
 
+export interface UserFindOnebyUsername {
+  id?: number;
+  username?: string;
+}
 @Injectable()
 export class UserAdminService {
 
@@ -52,4 +56,13 @@ export class UserAdminService {
         }
         return { message: 'User does not exists' }
   }
+
+  async findByUsername( data: UserFindOnebyUsername ) {
+    return await this.userAdmRepository
+      .createQueryBuilder('useradmin')
+      .where( data )
+      .addSelect('useradmin.password')
+      .getOne()
+  }
+
 }
